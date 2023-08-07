@@ -1,5 +1,7 @@
 # test files
 *main.py
+file.json
+test_save_reload_base_model.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

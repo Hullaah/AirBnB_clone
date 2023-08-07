@@ -7,6 +7,7 @@ import datetime
 import uuid
 from models.base_model import BaseModel
 
+
 class TestPublicInstanceAttributes(unittest.TestCase):
     """Test case for the public instance attributes of the BaseModel
     class
@@ -38,7 +39,6 @@ class TestPublicInstanceAttributes(unittest.TestCase):
         instance created_at attribute.
         """
         self.assertTrue(isinstance(self.model.created_at, datetime.datetime))
-
 
     def test_updated_at(self):
         """This is the test method that tests the BaseModel public
@@ -84,17 +84,19 @@ class TestInstantiateBaseModelFromDict(unittest.TestCase):
         instance created_at attribute.
         """
         created_at = datetime.datetime.fromisoformat(self.dict["created_at"])
-        self.assertIsInstance(self.model_from_dict.created_at, datetime.datetime)
+        self.assertIsInstance(self.model_from_dict.created_at,
+                              datetime.datetime)
         self.assertEqual(created_at, self.model_from_dict.created_at)
-
 
     def test_updated_at(self):
         """This is the test method that tests the BaseModel public
         instance updated_at attribute.
         """
         updated_at = datetime.datetime.fromisoformat(self.dict["updated_at"])
-        self.assertIsInstance(self.model_from_dict.updated_at, datetime.datetime)
-        self.assertEqual(updated_at, self.model_from_dict.updated_at)
+        self.assertIsInstance(self.model_from_dict.updated_at,
+                              datetime.datetime)
+        self.assertEqual(updated_at,
+                         self.model_from_dict.updated_at)
 
 
 class TestDunderMethods(unittest.TestCase):
@@ -172,7 +174,7 @@ class TestPublicInstanceMethodToDict(unittest.TestCase):
         del self.model_dict
         del self.model
 
-    def test_model_dict_contains_keys_and_values_of__dict__instance_attribute(self):
+    def test_model_dict_contains_keys_and_values_of__dict__(self):
         """This test method tests that the self.model_dict
         contains all the keys and values in self.model__dict__
         """
@@ -187,8 +189,9 @@ class TestPublicInstanceMethodToDict(unittest.TestCase):
         self.assertIn("__class__", self.model_dict)
         self.assertEqual(self.model_dict["__class__"], "BaseModel")
 
-    def test_created_at_and_updated_at_keys_have_their_values_in_isoformat(self):
-        """tests that created at and updated at keys have their values in isoformat
+    def test_created_at_and_updated_at_keys_in_isoformat(self):
+        """tests that created at and updated at keys
+        have their values in isoformat
         """
         self.assertIsInstance(self.model_dict["created_at"], str)
         self.assertIsInstance(self.model_dict["updated_at"], str)
