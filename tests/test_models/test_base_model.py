@@ -180,7 +180,11 @@ class TestPublicInstanceMethodToDict(unittest.TestCase):
         """
         for key in self.model.__dict__:
             self.assertIn(key, self.model_dict)
-            self.assertEqual(self.model.__dict__[key], self.model_dict[key])
+            if key != "updated_at" and key != "created_at":
+                self.assertEqual(self.model.__dict__[key], self.model_dict[key])
+            else:
+                self.assertEqual(self.model.__dict__[key],
+                                 datetime.datetime.fromisoformat(self.model_dict[key]))
 
     def test_model_dict_contains_the__class__key(self):
         """tests that the self.model_dict contains the __class__ key and they
