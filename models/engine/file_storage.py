@@ -24,7 +24,7 @@ class FileStorage:
         """
         return FileStorage.__objects
 
-    def new(self, obj: object):
+    def new(self, obj):
         """
         Sets the new obj in __objects
         """
