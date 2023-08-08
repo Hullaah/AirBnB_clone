@@ -1,3 +1,5 @@
+# text editor added files
+.vscode
 # test files
 *main.py
 file.json
