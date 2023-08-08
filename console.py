@@ -6,9 +6,12 @@ the entry point of the command interpreter.
 import cmd
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+from models import storage
 
 
 all_class_names = ["BaseModel"]
+
+
 class HBNBCommand(cmd.Cmd):
     """This is the class for the entry point of the
     command interpreter
@@ -38,14 +41,16 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg) -> bool:
-        """ create: create [ARG]
-        ARG : class name of object to create
+        """ create: create [CLASS]
+        CLASS : class name of object to create
+
         SYNOPSIS : creates a new instance of [ARG], saves it (to file.json)
                     and prints the id
+
         EXAMPLE : create BaseModel
         """
         classes = [
-            {"class_name": "BaseModel","class_creator": create_basemodel}
+            {"class_name": "BaseModel", "class_creator": create_basemodel}
         ]
         if not arg:
             print("** class name missing **")
@@ -61,16 +66,106 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """show: show [CLASS] [ID]
-        ARG : class name of object to show
+        CLASS : class name of object to show
+        ID : instance id of object to show
+
         SYNOPSIS : prints the string representation od an instance based on
                     the class name and id
+
         EXAMPLE : show BaseModel ffde2-a345-67e3-2ed3
         """
-        args = arg.split()
-        if args[0] not in all_class_names:
-            print("** class doesn't exist **")
+        args = parse_arg(arg)
+        try:
+            if args[0] not in all_class_names:
+                print("** class doesn't exist **")
+                return False
+        except IndexError:
+            print("** class name missing **")
             return False
-        print(FileStorage().all()[f"{args[0]}.{args[1]}"])
+        else:
+            try:
+                print(FileStorage().all()[f"{args[0]}.{args[1]}"])
+            except IndexError:
+                print("** instance id missing **")
+            except KeyError:
+                print("** no instance found **")
+
+    def do_destroy(self, arg):
+        """destroy: destroy [CLASS] [ID]
+        CLASS : class name of object to destroy
+        ID : instance id of object to destroy
+
+        SYNOPSIS :  deletes an instance based on the class name and id
+
+        EXAMPLE : destroy BaseModel ffde2-a345-67e3-2ed3
+        """
+        args = parse_arg(arg)
+        try:
+            if args[0] not in all_class_names:
+                print("** class doesn't exist **")
+                return False
+        except IndexError:
+            print("** class name missing **")
+            return False
+        else:
+            try:
+                del FileStorage().all()[f"{args[0]}.{args[1]}"]
+                storage.save()
+            except IndexError:
+                print("** instance id missing **")
+            except KeyError:
+                print("** no instance found **")
+
+    def do_all(self, arg):
+        """all : all | all [CLASS]
+        CLASS (optional) : classname of all instances to be displayed
+
+        SYNOPSIS : displays string representation of all instances based or not
+                    on the class name
+
+        EXAMPLE : all
+                 all User
+        """
+        all_instances = []
+        if not arg:
+            for _, v in FileStorage().all().items():
+                all_instances.append(str(v))
+        else:
+            if arg not in all_class_names:
+                print("** class doesn't exist **")
+                return False
+            for k, v in FileStorage().all().items():
+                if k.startswith(f"{arg}."):
+                    all_instances.append(str(v))
+        print(all_instances)
+        return False
+
+    def do_update(self, arg):
+        """update : update [CLASS] [ID] [ATTRIBUTE-NAME] [ATTRIBUTE-VALUE]
+        CLASS : class name of object to update
+        ID : id of class name
+        ATTRIBUTE-NAME : attribute to update
+        ATTRIBUTE-VALUE : value to set attribute to
+
+        SYNOPSIS : updates an instance based on the class name and id by
+                    adding or updating attribute
+
+        EXAMPLE : update User 1234-1234-1234 email "aibnb@mail.com"
+        """
+        args = parse_arg(arg)
+        if len(args) < 4:
+            match len(args):
+                case 0:
+                    print("** class name missing **")
+                case 1:
+                    print("** instance id missing **")
+                case 2:
+                    print("** attribute name missing **")
+                case 3:
+                    print("** value missing **")
+        else:
+            setattr(FileStorage().all()[f"{args[0]}.{args[1]}"], args[2],
+                    args[3])
 
     def help_help(self):
         """method called when help help is inputed at the command
@@ -78,6 +173,7 @@ class HBNBCommand(cmd.Cmd):
         """
         print("list available command with 'help' or detailed help ", end="")
         print("with 'help cmd'")
+
 
 def create_basemodel():
     """Dispatch function called when create is supplied with BaseModel argument
@@ -87,5 +183,46 @@ def create_basemodel():
     new_base_model.save()
     print(new_base_model.id)
 
+
+def parse_arg(arg: str) -> list:
+    """The command interpreter argument parser
+
+    Args:
+        arg: string read from command interpreter to be parsed
+
+    Return:
+        Array of parsed arguments
+    """
+    args = []
+    while True:
+        first = arg.find('"')
+        second = arg[first + 1:].find('"')
+        second = second if second == -1 else second + first + 1
+        # if no word in between double quotes
+        if first == -1 or second == -1:
+            args.extend(arg.split())
+            break
+        else:
+            try:
+                # if double quotes is placed correctly in the string
+                if arg[first - 1] == " ":
+                    args.extend(arg[0:first].split())
+                    args.extend([arg[first:second + 1]])
+                else:
+                    args.extend(arg[0:second + 1].split())
+            # if double quote falls at the beginning of the string
+            # (placed correctly)
+            except IndexError:
+                args.extend(arg[0:first].split())
+                args.extend([arg[first:second + 1]])
+        arg = arg[second + 1:]
+    return [x.replace('"', "") for x in args]
+
+
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
+    # HBNBCommand().
+    # onecmd("update BaseModel 0bfa6496-8f40-4680-abaf-7c9cd3631094
+    #  name \"Betty Holberton\"")
+    # HBNBCommand().
+    # onecmd("show BaseModel 0bfa6496-8f40-4680-abaf-7c9cd3631094")
