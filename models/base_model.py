@@ -14,6 +14,7 @@ from . import storage
 class BaseModel:
     """The BaseModel class is the base class for all our
     models to be used in this project.
+
     Attributes:
         Empty (No attributes)
     """

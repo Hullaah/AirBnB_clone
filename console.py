@@ -4,12 +4,26 @@ during the alx SE engineering course. It contains the code for
 the entry point of the command interpreter.
 """
 import cmd
-from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 from models import storage
 
 
-all_class_names = ["BaseModel"]
+all_class_names = [
+    "BaseModel",
+    "User",
+    "State",
+    "City",
+    "Amenity",
+    "Place",
+    "Review",
+]
 
 
 class HBNBCommand(cmd.Cmd):
@@ -50,7 +64,13 @@ class HBNBCommand(cmd.Cmd):
         EXAMPLE : create BaseModel
         """
         classes = [
-            {"class_name": "BaseModel", "class_creator": create_basemodel}
+            {"class_name": "BaseModel", "class_creator": create_basemodel},
+            {"class_name": "User", "class_creator": create_user},
+            {"class_name": "State", "class_creator": create_state},
+            {"class_name": "City", "class_creator": create_city},
+            {"class_name": "Amenity", "class_creator": create_amenity},
+            {"class_name": "Place", "class_creator": create_place},
+            {"class_name": "Review", "class_creator": create_review},
         ]
         if not arg:
             print("** class name missing **")
@@ -164,8 +184,20 @@ class HBNBCommand(cmd.Cmd):
                 case 3:
                     print("** value missing **")
         else:
+            value = None
+            if args[0] == "Place":
+                match args[2]:
+                    case ("number_rooms" | "number_bathrooms" | "max_guest" |
+                            "price_by_night"):
+                        value = int(args[3])
+                    case "latitude" | "longitude":
+                        value = float(args[3])
+                    case _:
+                        value = args[3]
+            else:
+                value = args[3]
             setattr(FileStorage().all()[f"{args[0]}.{args[1]}"], args[2],
-                    args[3])
+                    value)
 
     def help_help(self):
         """method called when help help is inputed at the command
@@ -182,6 +214,60 @@ def create_basemodel():
     new_base_model = BaseModel()
     new_base_model.save()
     print(new_base_model.id)
+
+
+def create_user():
+    """Dispatch function called when create is supplied with User argument
+    at the command interpreter
+    """
+    new_user = User()
+    new_user.save()
+    print(new_user.id)
+
+
+def create_state():
+    """Dispatch function called when create is supplied with State argument
+    at the command interpreter
+    """
+    new_state = State()
+    new_state.save()
+    print(new_state.id)
+
+
+def create_city():
+    """Dispatch function called when create is supplied with City argument
+    at the command interpreter
+    """
+    new_city = City()
+    new_city.save()
+    print(new_city.id)
+
+
+def create_amenity():
+    """Dispatch function called when create is supplied with Amenity argument
+    at the command interpreter
+    """
+    new_amenity = Amenity()
+    new_amenity.save()
+    print(new_amenity.id)
+
+
+def create_place():
+    """Dispatch function called when create is supplied with Place argument
+    at the command interpreter
+    """
+    new_place = Place()
+    new_place.save()
+    print(new_place.id)
+
+
+def create_review():
+    """Dispatch function called when create is supplied with Review argument
+    at the command interpreter
+    """
+    new_review = Review()
+    new_review.save()
+    print(new_review.id)
 
 
 def parse_arg(arg: str) -> list:
