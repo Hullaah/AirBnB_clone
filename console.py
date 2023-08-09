@@ -104,7 +104,7 @@ class HBNBCommand(cmd.Cmd):
             return False
         else:
             try:
-                print(FileStorage().all()[f"{args[0]}.{args[1]}"])
+                print(storage.all()[f"{args[0]}.{args[1]}"])
             except IndexError:
                 print("** instance id missing **")
             except KeyError:
@@ -129,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
             return False
         else:
             try:
-                del FileStorage().all()[f"{args[0]}.{args[1]}"]
+                del storage.all()[f"{args[0]}.{args[1]}"]
                 storage.save()
             except IndexError:
                 print("** instance id missing **")
@@ -148,13 +148,13 @@ class HBNBCommand(cmd.Cmd):
         """
         all_instances = []
         if not arg:
-            for _, v in FileStorage().all().items():
+            for _, v in storage.all().items():
                 all_instances.append(str(v))
         else:
             if arg not in all_class_names:
                 print("** class doesn't exist **")
                 return False
-            for k, v in FileStorage().all().items():
+            for k, v in storage.all().items():
                 if k.startswith(f"{arg}."):
                     all_instances.append(str(v))
         print(all_instances)
@@ -196,7 +196,7 @@ class HBNBCommand(cmd.Cmd):
                         value = args[3]
             else:
                 value = args[3]
-            setattr(FileStorage().all()[f"{args[0]}.{args[1]}"], args[2],
+            setattr(storage.all()[f"{args[0]}.{args[1]}"], args[2],
                     value)
 
     def help_help(self):
