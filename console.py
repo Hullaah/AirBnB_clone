@@ -8,13 +8,6 @@ Defines different methods to enable the user perform commands
 
 import cmd
 from models import storage
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
@@ -22,15 +15,7 @@ class HBNBCommand(cmd.Cmd):
     The main AirBnB console class
     """
     prompt = "(hbnb) "
-    __MODELS = {
-        "Amenity": Amenity,
-        "BaseModel": BaseModel,
-        "City": City,
-        "Place": Place,
-        "Review": Review,
-        "State": State,
-        "User": User
-    }
+    __MODELS = storage.models()
     __attributes = {
         "number_rooms": int,
         "number_bathrooms": int,
@@ -124,6 +109,8 @@ class HBNBCommand(cmd.Cmd):
         new_value = None
         if args[2] in self.__attributes.keys():
             new_value = self.__attributes[args[2]](args[3])
+        else:
+            new_value = str(args[3])
         updated_obj = storage.all()[f"{model_tuple[1]}"]
         setattr(updated_obj, args[2], new_value)
         updated_obj.save()
