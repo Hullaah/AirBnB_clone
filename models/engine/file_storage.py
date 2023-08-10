@@ -70,4 +70,3 @@ class FileStorage:
             }
             models_key = key.split(".")[0]
             FileStorage.__objects[key] = models[models_key](**value)
-
