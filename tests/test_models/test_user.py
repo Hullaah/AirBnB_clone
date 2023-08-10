@@ -42,6 +42,7 @@ class TestUserAttributes(unittest.TestCase):
         """
         self.assertIsInstance(self.user.first_name, str)
 
+
 class TestUserFileStorage(unittest.TestCase):
     def setUp(self):
         """
@@ -183,3 +184,7 @@ class TestUserFileStorage(unittest.TestCase):
         """
         with self.assertRaises(TypeError):
             storage.all(self.new_user)
+
+
+if __name__ == "__main__":
+    unittest.main()

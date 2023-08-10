@@ -79,8 +79,6 @@ class TestPlaceAttributes(unittest.TestCase):
         [self.assertTrue(isinstance(x, str)) for x in self.place.amenity_ids]
 
 
-
-
 class TestPlaceFileStorage(unittest.TestCase):
     def setUp(self):
         """
@@ -222,3 +220,7 @@ class TestPlaceFileStorage(unittest.TestCase):
         """
         with self.assertRaises(TypeError):
             storage.all(self.new_place)
+
+
+if __name__ == "__main__":
+    unittest.main()

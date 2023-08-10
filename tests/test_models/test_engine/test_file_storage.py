@@ -158,5 +158,6 @@ class TestFileStorage(unittest.TestCase):
         with self.assertRaises(TypeError):
             storage.all(self.new_model)
 
+
 if __name__ == "__main__":
     unittest.main()

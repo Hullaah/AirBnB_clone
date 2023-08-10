@@ -43,9 +43,9 @@ class FileStorage:
         with open(FileStorage.__file_path, "w") as storage_file:
             storage_file.write(object_str_dict)
 
-    def reload(self):
+    def models(self):
         """
-        Deserialises the JSON file into the __objects dictionary
+        Retrieves all available models
         """
         from models.base_model import BaseModel
         from models.user import User
@@ -54,19 +54,26 @@ class FileStorage:
         from models.place import Place
         from models.review import Review
         from models.amenity import Amenity
+        models_dict = {
+            "Amenity": Amenity,
+            "BaseModel": BaseModel,
+            "City": City,
+            "Place": Place,
+            "Review": Review,
+            "State": State,
+            "User": User,
+        }
+        return models_dict
+
+    def reload(self):
+        """
+        Deserialises the JSON file into the __objects dictionary
+        """
         if not os.path.exists(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, "r") as storage_file:
             object_str_dict = json.loads(storage_file.read())
+        models = self.models()
         for key, value in object_str_dict.items():
-            models = {
-                "Amenity": Amenity,
-                "BaseModel": BaseModel,
-                "City": City,
-                "Place": Place,
-                "Review": Review,
-                "State": State,
-                "User": User,
-            }
             models_key = key.split(".")[0]
             FileStorage.__objects[key] = models[models_key](**value)
