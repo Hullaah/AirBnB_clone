@@ -47,10 +47,27 @@ class FileStorage:
         """
         Deserialises the JSON file into the __objects dictionary
         """
-        from ..base_model import BaseModel
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.place import Place
+        from models.review import Review
+        from models.amenity import Amenity
         if not os.path.exists(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, "r") as storage_file:
             object_str_dict = json.loads(storage_file.read())
         for key, value in object_str_dict.items():
-            FileStorage.__objects[key] = BaseModel(**value)
+            models = {
+                "Amenity": Amenity,
+                "BaseModel": BaseModel,
+                "City": City,
+                "Place": Place,
+                "Review": Review,
+                "State": State,
+                "User": User,
+            }
+            models_key = key.split(".")[0]
+            FileStorage.__objects[key] = models[models_key](**value)
+

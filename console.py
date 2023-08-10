@@ -198,6 +198,7 @@ class HBNBCommand(cmd.Cmd):
                 value = args[3]
             setattr(storage.all()[f"{args[0]}.{args[1]}"], args[2],
                     value)
+            storage.save()
 
     def help_help(self):
         """method called when help help is inputed at the command
