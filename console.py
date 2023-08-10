@@ -23,15 +23,7 @@ class HBNBCommand(cmd.Cmd):
     The main AirBnB console class
     """
     prompt = "(hbnb) "
-    __MODELS = {
-        "Amenity": Amenity,
-        "BaseModel": BaseModel,
-        "City": City,
-        "Place": Place,
-        "Review": Review,
-        "State": State,
-        "User": User
-    }
+    __MODELS = storage.models()
     __attributes = {
         "number_rooms": int,
         "number_bathrooms": int,
