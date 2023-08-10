@@ -171,7 +171,7 @@ class HBNBCommand(cmd.Cmd):
         Defines help for the update command
         """
         print("Updates an attribute of a model instance")
-        print("Usage: update [MODEL_TYPE] [ID] [ATTRIBUTE] [NEW_VALUE]")
+        print('Usage: update [MODEL_TYPE] [ID] [ATTRIBUTE] "[NEW_VALUE]"')
 
     # Base functionality for the console
     def emptyline(self):
