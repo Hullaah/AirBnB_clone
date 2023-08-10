@@ -7,6 +7,7 @@ Defines different methods to enable the user perform commands
 
 
 import cmd
+import re
 from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -130,6 +131,31 @@ class HBNBCommand(cmd.Cmd):
         setattr(updated_obj, args[2], new_value)
         updated_obj.save()
 
+    def count(self, cls):
+        """Default method called
+        """
+        print(len([x for x in storage.all().keys()
+                   if x.startswith(cls[:-1])]))
+
+    def default(self, line):
+        methods = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "count": self.count,
+        }
+        args = tuple(line.split(".", maxsplit=1))
+        if len(args) != 2:
+            return super().default(line)
+        first, last = args[1].find("("), args[1].rfind(")")
+        if first == -1 or last == -1 or last != len(args[1]) - 1:
+            return super().default(line)
+        try:
+            return (methods[args[1][0:first]]
+                    (args[0] + " " + args[1][first + 1:last]))
+        except KeyError:
+            return super().default(line)
+
     # Help - control the help prompts
     def help_help(self):
         """
@@ -241,3 +267,9 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("User.count()")
