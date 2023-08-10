@@ -58,20 +58,21 @@ class HBNBCommand(cmd.Cmd):
         """
         Defines the create command for the console
         """
-        args = self.parse_args(line)
+        args = self.parse_arg(line)
         if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in self.__MODELS.keys():
             print("** class doesn't exist **")
         else:
             new_model = self.__MODELS[args[0]]()
+            print(new_model.id)
             new_model.save()
 
     def do_show(self, line):
         """
         Defines the show command for the console
         """
-        args = self.parse_args(line)
+        args = self.parse_arg(line)
         model_tuple = self.validity_check(args)
         if model_tuple[0] is False:
             print(model_tuple[1])
@@ -82,7 +83,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Defines the destroy command for the console
         """
-        args = self.parse_args(line)
+        args = self.parse_arg(line)
         model_tuple = self.validity_check(args)
         if model_tuple[0] is False:
             print(model_tuple[1])
@@ -94,12 +95,12 @@ class HBNBCommand(cmd.Cmd):
         """
         Implements the all command
         """
-        args = self.parse_args(line)
+        args = self.parse_arg(line)
         storage.reload()
         if len(args) == 0:
             print([str(model) for model in storage.all().values()])
         elif args[0] not in self.__MODELS.keys():
-            print("** class doesn't exist")
+            print("** class doesn't exist **")
         else:
             print([str(model) for key, model in
                    storage.all().items() if args[0] in key])
@@ -108,7 +109,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Implements the update command for the console
         """
-        args = self.parse_args(line)
+        args = self.parse_arg(line)
         model_tuple = self.validity_check(args)
         if model_tuple[0] is False:
             print(model_tuple[1])
@@ -120,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return False
         args = args[:4]
-        new_value = args[3].strip('"')
+        new_value = None
         if args[2] in self.__attributes.keys():
             new_value = self.__attributes[args[2]](args[3])
         updated_obj = storage.all()[f"{model_tuple[1]}"]
@@ -192,11 +193,33 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
 
-    def parse_args(self, args):
+    def parse_arg(self, arg: str) -> tuple:
+        """parses the arguments into a tuple
         """
-        parses the arguments into a tuple
-        """
-        return tuple(args.split())
+        args = []
+        while True:
+            first = arg.find('"')
+            second = arg[first + 1:].find('"')
+            second = second if second == -1 else second + first + 1
+            # if no word in between double quotes
+            if first == -1 or second == -1:
+                args.extend(arg.split())
+                break
+            else:
+                try:
+                    # if double quotes is placed correctly in the string
+                    if arg[first - 1] == " ":
+                        args.extend(arg[0:first].split())
+                        args.extend([arg[first:second + 1]])
+                    else:
+                        args.extend(arg[0:second + 1].split())
+                # if double quote falls at the beginning of the string
+                # (placed correctly)
+                except IndexError:
+                    args.extend(arg[0:first].split())
+                    args.extend([arg[first:second + 1]])
+            arg = arg[second + 1:]
+        return tuple([x.strip('"') for x in args])
 
     def validity_check(self, args):
         """
@@ -209,7 +232,6 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             return False, "** instance id missing **"
         model_key = f"{args[0]}.{args[1]}"
-        storage.reload()
         if model_key not in storage.all().keys():
             return False, "** no instance found **"
         return True, model_key
