@@ -7,7 +7,6 @@ Defines different methods to enable the user perform commands
 
 
 import cmd
-import re
 from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -136,6 +135,8 @@ class HBNBCommand(cmd.Cmd):
                    if x.startswith(cls[:-1])]))
 
     def default(self, line):
+        """The default method called when the command is not recognised
+        """
         methods = {
             "all": self.do_all,
             "show": self.do_show,
@@ -202,7 +203,7 @@ class HBNBCommand(cmd.Cmd):
               "particular type")
         print("To show all models:")
         print("Usage: all")
-        print("To show only models of a particular type: ")
+        print("To show only models of a particular type:")
         print("Usage: all [MODEL_TYPE]")
 
     def help_update(self):
