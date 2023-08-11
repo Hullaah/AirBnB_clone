@@ -7,6 +7,7 @@ Defines different methods to enable the user perform commands
 
 
 import cmd
+import re
 from models import storage
 
 
@@ -26,14 +27,14 @@ class HBNBCommand(cmd.Cmd):
     }
 
     # Commands - these define the console functionality
-    def do_EOF(self, line):
+    def do_EOF(self, _):
         """
         Defines EOF action
         """
         print()
         return True
 
-    def do_quit(self, line):
+    def do_quit(self, _):
         """
         Defines the quit command
         """
@@ -110,10 +111,35 @@ class HBNBCommand(cmd.Cmd):
         if args[2] in self.__attributes.keys():
             new_value = self.__attributes[args[2]](args[3])
         else:
-            new_value = str(args[3])
+            new_value = args[3]
         updated_obj = storage.all()[f"{model_tuple[1]}"]
         setattr(updated_obj, args[2], new_value)
         updated_obj.save()
+
+    def count(self, cls):
+        """Default method called
+        """
+        print(len([x for x in storage.all().keys()
+                   if x.startswith(cls[:-1])]))
+
+    def default(self, line):
+        methods = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "count": self.count,
+        }
+        args = tuple(line.split(".", maxsplit=1))
+        if len(args) != 2:
+            return super().default(line)
+        first, last = args[1].find("("), args[1].rfind(")")
+        if first == -1 or last == -1 or last != len(args[1]) - 1:
+            return super().default(line)
+        try:
+            return (methods[args[1][0:first]]
+                    (args[0] + " " + args[1][first + 1:last]))
+        except KeyError:
+            return super().default(line)
 
     # Help - control the help prompts
     def help_help(self):
@@ -226,3 +252,9 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("create User")
+    # HBNBCommand().onecmd("User.count()")
