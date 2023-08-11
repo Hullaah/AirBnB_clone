@@ -6,6 +6,7 @@ from console import HBNBCommand
 from unittest.mock import patch
 from models.engine.file_storage import FileStorage
 from io import StringIO
+from models import storage
 import unittest
 import os
 
@@ -15,29 +16,37 @@ class TestHelp(unittest.TestCase):
     """
 
     def test_help(self):
+        """test case for help command
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help")
             help = ("\nDocumented commands (type help <topic>):\n" +
                     "========================================\n" +
                     "EOF  all  create  destroy  help  quit  show  update\n\n"
-                )
+                    )
             self.assertEqual(help, f.getvalue())
+
     def test_help_help(self):
+        """test case for help help
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help help")
             help = ("You can use help <command> to get help for a command.\n" +
-                    "Usage: help [COMMAND]\n"
-                    "Alternative usage: ? [COMMAND]\n"
-                )
+                    "Usage: help [COMMAND]\nAlternative usage: ? [COMMAND]\n"
+                    )
             self.assertEqual(help, f.getvalue())
 
     def test_help_EOF(self):
+        """test case for help EOF
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help EOF")
             help = "Press Ctrl + D to exit the console\n"
             self.assertEqual(help, f.getvalue())
 
     def test_help_all(self):
+        """test case for help all
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help all")
             help = (
@@ -49,6 +58,8 @@ class TestHelp(unittest.TestCase):
             self.assertEqual(help, f.getvalue())
 
     def test_help_create(self):
+        """test case for help create
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help create")
             help = (
@@ -57,14 +68,19 @@ class TestHelp(unittest.TestCase):
             self.assertEqual(help, f.getvalue())
 
     def test_help_destroy(self):
+        """test case for help destroy
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help destroy")
             help = (
-                "Deletes a particular model instance.\nUsage: destroy [MODEL_TYPE] [ID]\n"
+                "Deletes a particular model instance.\nUsage: " +
+                "destroy [MODEL_TYPE] [ID]\n"
             )
             self.assertEqual(help, f.getvalue())
 
     def test_help_quit(self):
+        """Test case for help quit
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help quit")
             help = (
@@ -73,6 +89,8 @@ class TestHelp(unittest.TestCase):
             self.assertEqual(help, f.getvalue())
 
     def test_help_show(self):
+        """Test case for help show
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help show")
             help = (
@@ -81,6 +99,8 @@ class TestHelp(unittest.TestCase):
             self.assertEqual(help, f.getvalue())
 
     def test_help_update(self):
+        """Test case for help update
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help update")
             help = (
@@ -94,24 +114,19 @@ class TestEOFandQuit(unittest.TestCase):
     """
 
     def test_eof(self):
+        """Test case for EOF command
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("EOF")
             self.assertEqual("\n", f.getvalue())
 
     def test_quit(self):
+        """Test case for the quit command
+        """
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("quit")
             self.assertEqual("", f.getvalue())
 
-class TestCreate(unittest.TestCase):
-    """This is the test case for the create command
-    """
 
-    def delete_file(self):
-        """
-        Deletes file.json
-        """
-        FileStorage._FileStorage__objects = {}
-        if os.path.exists(FileStorage._FileStorage__file_path):
-            os.remove(FileStorage._FileStorage__file_path)
-
+if __name__ == "__main__":
+    unittest.main()

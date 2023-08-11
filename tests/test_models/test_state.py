@@ -169,3 +169,7 @@ class TestStateFileStorage(unittest.TestCase):
         """
         with self.assertRaises(TypeError):
             storage.all(self.new_state)
+
+
+if __name__ == "__main__":
+    unittest.main()

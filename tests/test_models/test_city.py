@@ -174,3 +174,7 @@ class TestCityFileStorage(unittest.TestCase):
         """
         with self.assertRaises(TypeError):
             storage.all(self.new_city)
+
+
+if __name__ == "__main__":
+    unittest.main()

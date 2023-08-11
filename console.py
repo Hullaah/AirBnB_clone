@@ -253,9 +253,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("User.count()")
