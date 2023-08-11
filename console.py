@@ -123,6 +123,9 @@ class HBNBCommand(cmd.Cmd):
                    if x.startswith(cls[:-1])]))
 
     def default(self, line):
+        """
+        method that controls how the console handles lines by default
+        """
         methods = {
             "all": self.do_all,
             "show": self.do_show,
