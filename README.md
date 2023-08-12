@@ -19,7 +19,7 @@ The AirBnB Clone Python Console is a CLI application that provides a command-lin
 - Show information about a specific instance.
 - Update attributes of existing instances.
 - Delete instances.
-- List all instances or instances of a specific model type.  
+- List all instances or instances of a specific model type.
 
 The available model types are:
 
@@ -37,6 +37,16 @@ To use the AirBnB Clone Python Console, follow these steps:
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 3. Run the `console.py` file using Python:
+
+```bash
+./console.py
+```
+
+or
+
+```bash
+python3 console.py
+```
 
 ## Commands and Usage
 
