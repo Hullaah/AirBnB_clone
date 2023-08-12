@@ -8,9 +8,11 @@ Tests all methods and functionality
 
 import unittest
 from models.base_model import BaseModel
+from models.user import User
 from models.engine.file_storage import FileStorage
 import os
 from models import storage
+import json
 
 
 class TestFileStorage(unittest.TestCase):
@@ -48,14 +50,37 @@ class TestFileStorage(unittest.TestCase):
         self.delete_file()
         self.assertEqual(storage.__class__.__name__, "FileStorage")
 
-    def test_all_method(self):
+    def test_init_no_args(self):
+        """
+        Init of filestorage with many args
+        """
+        with self.assertRaises(TypeError):
+            FileStorage.__init__()
+
+    def test_init_many_args(self):
+        """
+        Init with args
+        """
+        with self.assertRaises(TypeError):
+            _ = FileStorage(1, 2, 3)
+
+    def test_all_method_2(self):
         """
         Tests the all method for the console
         """
         self.delete_file()
         self.assertEqual(storage.all(), {})
+        self.delete_file()
+        obj_list = []
+        for _ in range(80):
+            model1 = BaseModel()
+            obj_list.append(model1)
+        self.assertCountEqual(obj_list, list(storage.all().values()))
+        for obj in obj_list:
+            self.assertIn(f"BaseModel.{obj.id}", storage.all().keys())
+            self.assertIn(obj, storage.all().values())
 
-    def check_attributes(self):
+    def test_check_attributes(self):
         """
         Checks attributes in FileStorage class
         """
@@ -65,11 +90,52 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(hasattr(FileStorage, "_FileStorage__objects"), True)
         self.assertEqual(getattr(FileStorage, "_FileStorage__objects"), {})
 
+    def test_new_2(self):
+        """
+        Tests new method
+        """
+        self.delete_file()
+        new_model = BaseModel()
+        self.assertIn(new_model, storage.all().values())
+        self.assertIn(f"BaseModel.{new_model.id}", storage.all().keys())
+
+    def test_reload_2(self):
+        """
+        tests reload
+        """
+        self.delete_file()
+        storage.reload()
+        self.assertEqual(FileStorage._FileStorage__objects, {})
+        new_model = User()
+        model_key = f"User.{new_model.id}"
+        storage.new(new_model)
+        storage.save()
+        storage.reload()
+        self.assertEqual(new_model.to_dict(),
+                         storage.all()[model_key].to_dict())
+
     def test_save_model(self):
         """
         Tests saving of a BaseModel
         """
-        self.assertIn(f"BaseModel.{self.new_model.id}", storage.all().keys())
+        new_model = User()
+        self.assertIn(f"User.{new_model.id}", storage.all().keys())
+
+    def test_save_2(self):
+        """Helps tests save() method for classname."""
+        self.delete_file()
+        new_model = BaseModel()
+        model_key = f"BaseModel.{new_model.id}"
+        storage.save()
+        self.assertTrue(os.path.exists(FileStorage._FileStorage__file_path))
+        model_dict = {
+            model_key: new_model.to_dict()
+        }
+        with open(FileStorage._FileStorage__file_path,
+                  "r", encoding="utf-8") as f:
+            self.assertEqual(f.read(), json.dumps(model_dict))
+            f.seek(0)
+            self.assertEqual(json.load(f), model_dict)
 
     def test_save_model_2(self):
         """
