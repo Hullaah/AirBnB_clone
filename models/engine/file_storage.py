@@ -40,7 +40,7 @@ class FileStorage:
         for key, obj in FileStorage.__objects.items():
             object_str_dict[key] = obj.to_dict()
         object_str_dict = json.dumps(object_str_dict)
-        with open(FileStorage.__file_path, "w") as storage_file:
+        with open(FileStorage.__file_path, "w", encoding="utf-8") as storage_file:
             storage_file.write(object_str_dict)
 
     def models(self):
@@ -71,7 +71,7 @@ class FileStorage:
         """
         if not os.path.exists(FileStorage.__file_path):
             return
-        with open(FileStorage.__file_path, "r") as storage_file:
+        with open(FileStorage.__file_path, "r", encoding="utf-8") as storage_file:
             object_str_dict = json.loads(storage_file.read())
         models = self.models()
         for key, value in object_str_dict.items():
