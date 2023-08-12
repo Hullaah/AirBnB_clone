@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """This file contains the global variable storage which
 is used to store and reload the saved objects to memory.
 """
