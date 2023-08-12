@@ -179,3 +179,7 @@ class TestReviewFileStorage(unittest.TestCase):
         """
         with self.assertRaises(TypeError):
             storage.all(self.new_review)
+
+
+if __name__ == "__main__":
+    unittest.main()

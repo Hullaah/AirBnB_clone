@@ -169,3 +169,7 @@ class TestAmenityFileStorage(unittest.TestCase):
         """
         with self.assertRaises(TypeError):
             storage.all(self.new_amenity)
+
+
+if __name__ == "__main__":
+    unittest.main()

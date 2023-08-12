@@ -7,7 +7,6 @@ Defines different methods to enable the user perform commands
 
 
 import cmd
-import re
 from models import storage
 
 
@@ -123,8 +122,7 @@ class HBNBCommand(cmd.Cmd):
                    if x.startswith(cls[:-1])]))
 
     def default(self, line):
-        """
-        method that controls how the console handles lines by default
+        """The default method called when the command is not recognised
         """
         methods = {
             "all": self.do_all,
@@ -192,7 +190,7 @@ class HBNBCommand(cmd.Cmd):
               "particular type")
         print("To show all models:")
         print("Usage: all")
-        print("To show only models of a particular type: ")
+        print("To show only models of a particular type:")
         print("Usage: all [MODEL_TYPE]")
 
     def help_update(self):
@@ -255,9 +253,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("create User")
-    # HBNBCommand().onecmd("User.count()")
