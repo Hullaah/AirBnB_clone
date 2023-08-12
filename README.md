@@ -38,6 +38,16 @@ To use the AirBnB Clone Python Console, follow these steps:
 2. Navigate to the project directory.
 3. Run the `console.py` file using Python:
 
+```bash
+./console.py
+```
+
+or
+
+```bash
+python3 console.py
+```
+
 ## Commands and Usage
 
 Upon launching the console, you'll be greeted with a prompt `(hbnb)`. You can enter various commands to interact with the AirBnB Clone's data. Here are some example commands:
