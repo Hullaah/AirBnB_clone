@@ -121,6 +121,28 @@ class HBNBCommand(cmd.Cmd):
         print(len([x for x in storage.all().keys()
                    if x.startswith(cls[:-1])]))
 
+    def arbitrary_update(self, cls: str, line: str, arg: str):
+        """This is the dispatch method handler for arbitrary update
+        commands
+        """
+        arr = line.split(",", maxsplit=1)
+        if len(arr) == 1:
+            return self.do_update(cls + " " + arr[0])
+        arr[1] = arr[1].strip()
+        first, last = arr[1].find("{"), arr[1].rfind("}")
+        if first == -1 and last == -1:
+            attr = arr[1].split(",")
+            self.do_update(cls + " " + arr[0] + " " + " ".join(attr))
+        elif first == 0 and last == len(arr[1]) - 1:
+            attr = arr[1][1:last].split(",")
+            for x in attr:
+                x = x.strip()
+                colon = x.find(":")
+                self.do_update(" ".join([cls, arr[0], x[:colon], x[colon + 1:]]
+                                        ))
+        else:
+            return super().default(arg)
+
     def default(self, line):
         """The default method called when the command is not recognised
         """
@@ -137,10 +159,13 @@ class HBNBCommand(cmd.Cmd):
         if first == -1 or last == -1 or last != len(args[1]) - 1:
             return super().default(line)
         try:
-            return (methods[args[1][0:first]]
+            return (methods[args[1][:first]]
                     (args[0] + " " + args[1][first + 1:last]))
         except KeyError:
-            return super().default(line)
+            if args[1][:first] == "update":
+                self.arbitrary_update(args[0], args[1][first + 1:last], line)
+            else:
+                super().default(line)
 
     # Help - control the help prompts
     def help_help(self):
