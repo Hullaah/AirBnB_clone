@@ -1,6 +1,7 @@
 # text editor added files
 .vscode
 # test files
+w3c_validator.py
 *main.py
 file.json
 test_save_reload_base_model.py
