@@ -3,9 +3,9 @@ body {
     padding: 0;
     font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
     color:  #484848;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 .container {
-    max-width: 1000px;
+    max-width: 62.5rem;
     margin: 30px auto;
 }
