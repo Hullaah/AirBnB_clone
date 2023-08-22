@@ -15,7 +15,7 @@ article {
     justify-content: center;
     align-items: stretch;
 }
-.place h2 {
+.place > article > h2 {
     font-size: 1.875rem;
     text-align: center;
     margin-bottom: 1.2rem;
@@ -31,7 +31,7 @@ article {
     line-height: 3.75rem;
     position: absolute;
     padding: .2rem;
-    top: 5%;
+    top: 2%;
     right: 5%;
 }
 .information {
@@ -56,4 +56,45 @@ article {
 
 .number_bathrooms::before {
     content: url(../images/icon_bath.png);
+}
+.description + .amenities h2 {
+    font-size: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+.description + .amenities {
+    margin-top: 2.5rem;
+}
+.description + .amenities ul {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    justify-content: center;
+    align-items: start;
+}
+.description + .amenities ul li {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+}
+.description + .amenities ul li:nth-of-type(1)::before {
+    content: url(../images/icon_tv.png);
+    margin-right: .75rem;
+}
+.description + .amenities ul li:nth-of-type(2)::before {
+    content: url(../images/icon_wifi.png);
+    margin-right: .75rem;
+}
+.description + .amenities ul li:nth-of-type(3)::before {
+    content: url(../images/icon_pets.png);
+    margin-right: .75rem;
+}
+.reviews h2 {
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+}
+.reviews h3 {
+    font-size: .875rem;
+}
+.reviews p {
+    font-size: .75rem;
 }
